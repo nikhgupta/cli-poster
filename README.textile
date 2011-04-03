@@ -1,0 +1,14 @@
+h1. CLI POSTER Command Line WordPress Blog Posting
+
+A simple Bash script to post your files/content to WordPress blogs
+
+h2. "Downloads":http://github.com/nikhgupta/cli-poster/downloads
+
+"Download the latest stable release":http://github.com/nikhgupta/cli-poster/downloads for use on your desktop or server.
+
+h2. "Documentation":http://wiki.github.com/nikhgupta/cli-poster
+
+* To install, download CLI POSTER and put it in a place you find fit. Next, simply create an alias to run @cli-poster.sh@ as a bash script  
+In Ubuntu, for example, you can add this entry to your @~/.bash_aliases@ file: @alias cliposter='bash /path/to/your/cli-poster.sh'@
+
+* You can get available commands by typing: @cliposter -h@, or examples by typing @cliposter -e@
