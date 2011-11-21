@@ -12,3 +12,5 @@ h2. "Documentation":http://wiki.github.com/nikhgupta/cli-poster
 In Ubuntu, for example, you can add this entry to your @~/.bash_aliases@ file: @alias cliposter='bash /path/to/your/cli-poster.sh'@
 
 * You can get available commands by typing: @cliposter -h@, or examples by typing @cliposter -e@
+
+* You can see a demo blog which is posted to via this script, here: http://lab.nikhgupta.com/category/demo/cliposter/
