@@ -23,7 +23,7 @@ def decode(source):
 
 def main():
     Query = stdin.read()
-    Result = encode(Query)
+    Result = encode(encode(Query))
     stdout.write(Result)
     
 if __name__ == "__main__":

@@ -310,7 +310,27 @@ function test_wp_configuration() {
 }
 function post_to_wordpress() {
     # Parameters: blog, user, pass, title, category, post-type, content
-    XML="<?xml version='1.0' encoding='iso-8859-1'?><methodCall><methodName>metaWeblog.newPost</methodName><params><param><value><int>0</int></value></param><param><value><string>$2</string></value></param><param><value><string>$3</string></value></param><param><value><struct><member><name>title</name><value><string>$4</string></value></member><member><name>description</name><value><string>$7</string></value></member><member><name>mt_allow_comments</name><value><int>1</int></value></member><member><name>mt_allow_pings</name><value><int>1</int></value></member><member><name>post_type</name><value><string>$6</string></value></member><member><name>mt_keywords</name><value><string/></value></member><member><name>categories</name><value><array><data><value><string>$5</string></value></data></array></value></member></struct></value></param><param><value><boolean>1</boolean></value></param></params></methodCall>"
+    XML="<?xml version=\"1.0\" encoding=\"iso-8859-1\" ?>
+         <methodCall><methodName>metaWeblog.newPost</methodName>
+         <params>
+         <param><value><int>0</int></value></param>
+         <param><value><string>$2</string></value></param>
+         <param><value><string>$3</string></value></param>
+         <param><value><struct>
+                <member><name>title</name><value><string>$4</string></value></member>
+                <member><name>description</name><value><string>$7</string></value></member>
+                <member><name>mt_allow_comments</name><value><int>1</int></value></member>
+                <member><name>mt_allow_pings</name><value><int>1</int></value></member>
+                <member><name>post_type</name><value><string>$6</string></value></member>
+                <member><name>categories</name><value>
+                    <array><data><value><string>$5</string></value></data></array>
+                    </value></member>
+           </struct></value></param>
+         <param><value><boolean>1</boolean></value></param>
+         </params>
+         </methodCall>"
+# Removed from the struct:
+#     <member><name>mt_keywords</name><value><string /></value></member>
 
     (( $DRYRUN )) || {
         response=$(curl -ksS -H "Content-Type: application/xml" -X POST --data-binary "${XML}" $1/xmlrpc.php)
@@ -358,6 +378,8 @@ function cliposter_post_file() {
     WP_POST=$(echo "$(<"$1")" | sed -e "s|'|\&apos;|g")
     WPTITLE=$(echo $WPTITLE | ./htmlentities.py)
     WP_POST=$(echo $WP_POST | ./htmlentities.py)
+    echo "WPTITLE: $WPTITLE"
+    echo "WP_POST: $WP_POST"
     #WPTITLE=$(php -r "echo htmlentities('$WPTITLE',ENT_NOQUOTES,'ISO-8859-1',false);")
     #WP_POST=$(php -r "echo htmlentities('$WP_POST',ENT_NOQUOTES,'ISO-8859-1',false);")
 
@@ -394,8 +416,10 @@ function cliposter_post_content() {
     # set the filename as the title of this post, and file content as the post content and sanitize both
     WPTITLE=$(echo "$1" | sed -e "s|'|\&apos;|g")
     WP_POST=$(echo "$2" | sed -e "s|'|\&apos;|g")
-#    WPTITLE=$(php -r "echo htmlentities('$WPTITLE',ENT_NOQUOTES,'ISO-8859-1',false);")
-#    WP_POST=$(php -r "echo htmlentities('$WP_POST',ENT_NOQUOTES,'ISO-8859-1',false);")
+    WPTITLE=$(echo $WPTITLE | ./htmlentities.py)
+    WP_POST=$(echo $WP_POST | ./htmlentities.py)
+    echo "WPTITLE: $WPTITLE"
+    echo "WP_POST: $WP_POST"
 
     # if a source format is provided, format the post accordingly
     if [ "$POSTFORMAT" != "auto" ] && [ "$POSTFORMAT" != "off" ]; then WP_POST="[${POSTFORMAT}]${WP_POST}[/${POSTFORMAT}]"; else POSTFORMAT="text"; fi
