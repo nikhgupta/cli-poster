@@ -168,7 +168,8 @@ function check_requirements() {
     type -P file &>/dev/null || die "I require 'file' but it's not installed."
     type -P grep &>/dev/null || die "I require 'grep' but it's not installed."
     type -P tput &>/dev/null || die "I require 'tput' but it's not installed."
-    type -P php  &>/dev/null || die "I require 'php'  but it's not installed."
+    # PHP only used for htmlentities: replaced with a py3k script in local directory.
+    #type -P php  &>/dev/null || die "I require 'php'  but it's not installed."
     [ -n "$OPENBROWSER" ] || warn "Can not find a suitable browser to open URLs. Disabling effect of '-o' option!\n"
 }
 
@@ -355,8 +356,10 @@ function cliposter_post_file() {
     # set the filename as the title of this post, and file content as the post content and sanitize both
     WPTITLE=$(echo "${filename}" | sed -e "s|'|\&apos;|g" -e "s|[-_]| |g")
     WP_POST=$(echo "$(<"$1")" | sed -e "s|'|\&apos;|g")
-    WPTITLE=$(php -r "echo htmlentities('$WPTITLE',ENT_NOQUOTES,'ISO-8859-1',false);")
-    WP_POST=$(php -r "echo htmlentities('$WP_POST',ENT_NOQUOTES,'ISO-8859-1',false);")
+    WPTITLE=$(echo $WPTITLE | ./htmlentities.py)
+    WP_POST=$(echo $WP_POST | ./htmlentities.py)
+    #WPTITLE=$(php -r "echo htmlentities('$WPTITLE',ENT_NOQUOTES,'ISO-8859-1',false);")
+    #WP_POST=$(php -r "echo htmlentities('$WP_POST',ENT_NOQUOTES,'ISO-8859-1',false);")
 
     # if a source format is provided, format the post accordingly
     if [ "$POSTFORMAT" == "auto" ]; then
